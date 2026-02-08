@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Forever 💍</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    font-family:'Montserrat',sans-serif;
+    background:radial-gradient(circle at top,#0d001a,#000);
+    color:white;
+    overflow-x:hidden;
+    text-align:center;
+}
+
+/* Fade animation */
+.fade{
+    animation:fadeIn 1.2s ease forwards;
+}
+@keyframes fadeIn{
+    from{opacity:0;transform:translateY(20px);}
+    to{opacity:1;transform:translateY(0);}
+}
+
+h1,h2,h3{
+    font-family:'Cinzel',serif;
+    letter-spacing:1px;
+}
+
+/* Animated drifting stars */
+.star{
+    position:absolute;
+    width:2px;
+    height:2px;
+    background:white;
+    opacity:0.8;
+    animation:drift linear infinite;
+}
+@keyframes drift{
+    from{transform:translateY(0);}
+    to{transform:translateY(-100vh);}
+}
+
+/* Card */
+.card{
+    width:90%;
+    max-width:450px;
+    margin:120px auto;
+    padding:40px;
+    background:rgba(255,255,255,0.05);
+    backdrop-filter:blur(10px);
+    border-radius:20px;
+    box-shadow:0 0 40px rgba(255,0,150,0.4);
+}
+
+input{
+    width:100%;
+    padding:12px;
+    margin:20px 0;
+    border:none;
+    border-radius:30px;
+    text-align:center;
+}
+
+button{
+    padding:12px 30px;
+    border:none;
+    border-radius:30px;
+    background:linear-gradient(45deg,#ff2e9b,#ff6ec7);
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+}
+button:hover{transform:scale(1.08);}
+button:disabled{opacity:0.4;cursor:not-allowed;}
+
+#typewriter{min-height:80px;line-height:1.6;}
+
+.year-title{
+    margin-top:60px;
+    font-size:26px;
+    color:#ff7ac6;
+}
+
+.month{
+    margin:15px auto;
+    padding:12px;
+    width:90%;
+    max-width:320px;
+    background:rgba(255,255,255,0.08);
+    border-radius:20px;
+    cursor:pointer;
+    transition:0.3s;
+}
+.month:hover{background:rgba(255,255,255,0.15);}
+
+.slideshow{
+    display:none;
+    max-width:380px;
+    margin:15px auto;
+    position:relative;
+    height:260px;
+}
+
+.slide{
+    position:absolute;
+    width:100%;
+    opacity:0;
+    transition:opacity 1s ease;
+}
+.slide img{
+    width:100%;
+    border-radius:20px;
+    box-shadow:0 0 25px rgba(255,0,150,0.7);
+}
+.slide.active{opacity:1;}
+
+#countdown{
+    font-size:22px;
+    margin-top:40px;
+    color:#ff6ec7;
+    animation:pulse 1.5s infinite;
+}
+@keyframes pulse{
+    0%{opacity:0.6;}
+    50%{opacity:1;}
+    100%{opacity:0.6;}
+}
+
+/* Proposal overlay */
+#proposalPopup{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:black;
+    opacity:0;
+    transition:1.2s;
+    padding-top:150px;
+}
+
+.ring{
+    font-size:90px;
+    animation:spin 4s linear infinite;
+}
+@keyframes spin{
+    from{transform:rotate(0);}
+    to{transform:rotate(360deg);}
+}
+
+#noBtn{
+    background:#555;
+    margin-left:15px;
+    position:relative;
+}
+
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    pointer-events:none;
+}
+</style>
+</head>
+
+<body>
+
+<audio id="bgMusic" loop>
+<source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<canvas id="fireworks"></canvas>
+
+<script>
+/* Generate animated stars */
+for(let i=0;i<120;i++){
+let s=document.createElement("div");
+s.className="star";
+s.style.left=Math.random()*100+"vw";
+s.style.top=Math.random()*100+"vh";
+s.style.animationDuration=(5+Math.random()*10)+"s";
+document.body.appendChild(s);
+}
+</script>
+
+<div class="card fade" id="loginPage">
+<h2>🌙 My Love Letter 🌙</h2>
+<div id="typewriter"></div>
+<h3>How would you like to call me? 😘</h3>
+<input type="text" id="password" placeholder="Your answer...">
+<button onclick="checkPassword()">Enter 💖</button>
+</div>
+
+<div id="mainPage" style="display:none;padding:20px;">
+<h1 class="fade">Our Journey 💞</h1>
+<div id="gallery"></div>
+<div id="countdown"></div>
+<br>
+<button id="proposalBtn" onclick="showProposal()" disabled>
+Open My Heart 💍
+</button>
+</div>
+
+<div id="proposalPopup">
+<div class="ring">💍</div>
+<h1 id="proposalText">Will You Be Mine Forever? ❤️</h1>
+<br>
+<button id="yesBtn" onclick="celebrate()">Yes 💖</button>
+<button id="noBtn">No 😢</button>
+</div>
+
+<script>
+
+/* Typewriter */
+const text="From May 2024 till today... every second with you has felt like destiny unfolding. Tonight... I ask you something eternal.";
+let i=0;
+function typeWriter(){
+if(i<text.length){
+document.getElementById("typewriter").innerHTML+=text.charAt(i);
+i++;
+setTimeout(typeWriter,35);
+}}
+typeWriter();
+
+/* Login + music fade-in */
+function checkPassword(){
+let pass=document.getElementById("password").value.toLowerCase().trim();
+if(pass==="daddy"){
+document.getElementById("loginPage").style.display="none";
+document.getElementById("mainPage").style.display="block";
+
+let music=document.getElementById("bgMusic");
+music.volume=0;
+music.play();
+
+let fade=setInterval(()=>{
+if(music.volume<0.9){
+music.volume+=0.05;
+}else{
+clearInterval(fade);
+}
+},300);
+
+generateGallery();
+startCountdown();
+}else{
+alert("That's not what you call me 😌");
+}}
+
+/* Timeline + slideshow */
+function generateGallery(){
+const timeline={
+"2024":["May 2024","June 2024","July 2024","August 2024","September 2024","October 2024","November 2024","December 2024"],
+"2025":["January 2025","February 2025","March 2025","April 2025","May 2025","June 2025","July 2025","August 2025","September 2025","October 2025","November 2025","December 2025"],
+"2026":["January 2026","February 2026"]
+};
+
+let gallery=document.getElementById("gallery");
+
+for(let year in timeline){
+let y=document.createElement("div");
+y.className="year-title";
+y.innerHTML="💖 "+year;
+gallery.appendChild(y);
+
+timeline[year].forEach(month=>{
+let m=document.createElement("div");
+m.className="month";
+m.innerHTML=month;
+
+let slideshow=document.createElement("div");
+slideshow.className="slideshow";
+
+let file=month.toLowerCase().replace(" ","");
+
+slideshow.innerHTML=`
+<div class="slide active"><img src="photos/${file}_1.jpg"></div>
+<div class="slide"><img src="photos/${file}_2.jpg"></div>
+`;
+
+let slides=slideshow.querySelectorAll(".slide");
+let index=0;
+let interval;
+
+m.onclick=function(){
+if(slideshow.style.display==="block"){
+slideshow.style.display="none";
+clearInterval(interval);
+}else{
+slideshow.style.display="block";
+interval=setInterval(()=>{
+slides[index].classList.remove("active");
+index=(index+1)%slides.length;
+slides[index].classList.add("active");
+},3000);
+}
+};
+
+gallery.appendChild(m);
+gallery.appendChild(slideshow);
+});
+}}
+
+/* Countdown */
+function startCountdown(){
+let sec=10;
+let interval=setInterval(()=>{
+document.getElementById("countdown").innerHTML=
+"The moment arrives in "+sec+" seconds ⏳";
+sec--;
+if(sec<0){
+clearInterval(interval);
+document.getElementById("countdown").innerHTML="It’s time... 💖";
+document.getElementById("proposalBtn").disabled=false;
+}},1000);
+}
+
+/* Proposal */
+function showProposal(){
+let popup=document.getElementById("proposalPopup");
+popup.style.display="block";
+setTimeout(()=>popup.style.opacity="1",100);
+}
+
+/* No button runs away */
+let noBtn=document.getElementById("noBtn");
+noBtn.addEventListener("mouseover",()=>{
+let x=Math.random()*300-150;
+let y=Math.random()*200-100;
+noBtn.style.transform=`translate(${x}px,${y}px)`;
+});
+
+/* Celebrate */
+function celebrate(){
+
+document.getElementById("proposalText").innerHTML="💖 She Said YES 💖";
+document.getElementById("noBtn").style.display="none";
+document.getElementById("yesBtn").style.display="none";
+
+let canvas=document.getElementById("fireworks");
+let ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let particles=[];
+for(let i=0;i<200;i++){
+particles.push({
+x:canvas.width/2,
+y:canvas.height/2,
+vx:(Math.random()-0.5)*10,
+vy:(Math.random()-0.5)*10,
+life:100,
+color:"hsl("+Math.random()*360+",100%,60%)"
+});
+}
+
+function animate(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+particles.forEach(p=>{
+p.x+=p.vx;
+p.y+=p.vy;
+p.vy+=0.05;
+p.life--;
+ctx.beginPath();
+ctx.arc(p.x,p.y,3,0,Math.PI*2);
+ctx.fillStyle=p.color;
+ctx.fill();
+});
+particles=particles.filter(p=>p.life>0);
+if(particles.length>0) requestAnimationFrame(animate);
+}
+animate();
+}
+</script>
+
+</body>
+</html>
