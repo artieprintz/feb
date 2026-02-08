@@ -277,8 +277,8 @@ slideshow.className="slideshow";
 let file=month.toLowerCase().replace(" ","");
 
 slideshow.innerHTML=`
-<div class="slide active"><img src="photos/${file}_1.jpg"></div>
-<div class="slide"><img src="photos/${file}_2.jpg"></div>
+<div class="slide active"><img src="${file}_1.jpg"></div>
+<div class="slide"><img src="${file}_2.jpg"></div>
 `;
 
 let slides=slideshow.querySelectorAll(".slide");
@@ -378,3 +378,4 @@ animate();
 
 </body>
 </html>
+
